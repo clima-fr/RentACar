@@ -1,0 +1,57 @@
+[
+    {
+        "id": 1,
+        "matricula": "ABC123",
+        "marca": "Toyota",
+        "modelo": "Corolla",
+        "cor": "Prata",
+        "portas": 4,
+        "precoDiario": 100.0,
+        "cilindrada": 1600,
+        "potencia": 120
+    },
+    {
+        "id": 2,
+        "matricula": "XYZ789",
+        "marca": "Honda",
+        "modelo": "Civic",
+        "cor": "Preto",
+        "portas": 4,
+        "precoDiario": 120.0,
+        "cilindrada": 1800,
+        "potencia": 140
+    },
+    {
+        "id": 3,
+        "matricula": "DEF456",
+        "marca": "Ford",
+        "modelo": "Focus",
+        "cor": "Azul",
+        "portas": 5,
+        "precoDiario": 90.0,
+        "cilindrada": 1400,
+        "potencia": 100
+    },
+    {
+        "id": 4,
+        "matricula": "GHI789",
+        "marca": "Volkswagen",
+        "modelo": "Golf",
+        "cor": "Branco",
+        "portas": 3,
+        "precoDiario": 110.0,
+        "cilindrada": 1600,
+        "potencia": 130
+    },
+    {
+        "id": 5,
+        "matricula": "JKL012",
+        "marca": "Chevrolet",
+        "modelo": "Cruze",
+        "cor": "Vermelho",
+        "portas": 4,
+        "precoDiario": 95.0,
+        "cilindrada": 1500,
+        "potencia": 110
+    }
+]

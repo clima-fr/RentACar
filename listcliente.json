@@ -1,0 +1,82 @@
+[
+    {
+        "id": 1,
+        "nome": "Clara Franco",
+        "nif": 222222222,
+        "dataNascimento": "12/12/2012",
+        "telefone": 999999999,
+        "email": "clara@email.com"
+    },
+    {
+        "id": 2,
+        "nome": "Pedro Matos",
+        "nif": 333333333,
+        "dataNascimento": "11/11/2011",
+        "telefone": 888888888,
+        "email": "matos@email.com"
+    },
+    {
+        "id": 3,
+        "nome": "Pedro Pinto",
+        "nif": 444444444,
+        "dataNascimento": "10/10/2010",
+        "telefone": 777777777,
+        "email": "pedro@email.com"
+    },
+    {
+        "id": 4,
+        "nome": "Temaco Mafumba",
+        "nif": 555555555,
+        "dataNascimento": "09/09/2009",
+        "telefone": 666666666,
+        "email": "temaco@email.com"
+    },
+    {
+        "id": 5,
+        "nome": "Ana Pereira",
+        "nif": 666666666,
+        "dataNascimento": "01/01/1985",
+        "telefone": 555555555,
+        "email": "ana.pereira@email.com"
+    },
+    {
+        "id": 6,
+        "nome": "Joana Rocha",
+        "nif": 777777777,
+        "dataNascimento": "25/09/1975",
+        "telefone": 444444444,
+        "email": "joana.rocha@email.com"
+    },
+    {
+        "id": 7,
+        "nome": "Marta Santos",
+        "nif": 888888888,
+        "dataNascimento": "10/06/1988",
+        "telefone": 333333333,
+        "email": "marta.santos@email.com"
+    },
+    {
+        "id": 8,
+        "nome": "Rui Pereira",
+        "nif": 999999999,
+        "dataNascimento": "18/04/1992",
+        "telefone": 222222222,
+        "email": "rui.pereira@email.com"
+    },
+    {
+        "id": 9,
+        "nome": "Sofia Lima",
+        "nif": 1010101010,
+        "dataNascimento": "22/11/1983",
+        "telefone": 111111111,
+        "email": "sofia.lima@email.com"
+    },
+    {
+        "id": 10,
+        "nome": "Vanessa Costa",
+        "nif": 1212121212,
+        "dataNascimento": "07/07/1977",
+        "telefone": 1313131313,
+        "email": "vanessa.costa@email.com"
+    }
+]

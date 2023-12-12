@@ -1,0 +1,92 @@
+[
+    {
+        "id": 1,
+        "data_inicio": "01/01/2022",
+        "data_fim": "10/01/2022",
+        "cliente_id": 1,
+        "automovel_id": 1,
+        "precoReserva": 200.0,
+        "numeroDias": 10
+    },
+    {
+        "id": 2,
+        "data_inicio": "15/02/2022",
+        "data_fim": "20/02/2022",
+        "cliente_id": 2,
+        "automovel_id": 2,
+        "precoReserva": 150.0,
+        "numeroDias": 5
+    },
+    {
+        "id": 3,
+        "data_inicio": "05/03/2023",
+        "data_fim": "10/03/2023",
+        "cliente_id": 3,
+        "automovel_id": 3,
+        "precoReserva": 180.0,
+        "numeroDias": 5
+    },
+    {
+        "id": 4,
+        "data_inicio": "20/04/2023",
+        "data_fim": "25/04/2023",
+        "cliente_id": 4,
+        "automovel_id": 4,
+        "precoReserva": 220.0,
+        "numeroDias": 5
+    },
+    {
+        "id": 5,
+        "data_inicio": "01/01/2024",
+        "data_fim": "10/01/2024",
+        "cliente_id": 5,
+        "automovel_id": 5,
+        "precoReserva": 250.0,
+        "numeroDias": 10
+    },
+    {
+        "id": 6,
+        "data_inicio": "15/06/2024",
+        "data_fim": "20/06/2024",
+        "cliente_id": 1,
+        "automovel_id": 1,
+        "precoReserva": 180.0,
+        "numeroDias": 5
+    },
+    {
+        "id": 7,
+        "data_inicio": "10/07/2024",
+        "data_fim": "15/07/2024",
+        "cliente_id": 2,
+        "automovel_id": 2,
+        "precoReserva": 200.0,
+        "numeroDias": 5
+    },
+    {
+        "id": 8,
+        "data_inicio": "01/01/2022",
+        "data_fim": "05/01/2022",
+        "cliente_id": 1,
+        "automovel_id": 1,
+        "precoReserva": 150.0,
+        "numeroDias": 5
+    },
+    {
+        "id": 9,
+        "data_inicio": "15/01/2022",
+        "data_fim": "20/01/2022",
+        "cliente_id": 2,
+        "automovel_id": 2,
+        "precoReserva": 180.0,
+        "numeroDias": 5
+    },
+    {
+        "id": 10,
+        "data_inicio": "05/01/2024",
+        "data_fim": "10/01/2024",
+        "cliente_id": 3,
+        "automovel_id": 3,
+        "precoReserva": 300.0,
+        "numeroDias": 5
+    }
+]
