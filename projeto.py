@@ -90,6 +90,17 @@ def adicionar_automovel():
     save_data("listautomovel.json", listAutomovel)
     print("Novo automóvel adicionado com sucesso!")
 
+def calcular_preco(numero_dias):
+    preco = float(input("Preço Reserva: "))
+    if(numero_dias <= 4):
+        return preco
+    elif(numero_dias > 4 and numero_dias <= 8):
+        print("Desconto de 15% aplicado")
+        return preco - (preco * 15 / 100)
+    elif(numero_dias > 8):
+        print("Desconto de 25% aplicado")
+        return preco - (preco * 25 / 100)
+
 def adicionar_reserva():
     print("\nAdicionar Reserva:")
     cliente_id = int(input("ID do cliente: "))
@@ -105,9 +116,8 @@ def adicionar_reserva():
             break  # Se a conversão for bem-sucedida, sai do loop
         except ValueError:
             print("Formato de data incorreto. Por favor, insira a data no formato dd/mm/yyyy (utilize a /).")
-    precoReserva = float(input("Preço Reserva: "))
-    numeroDias = int(input("Numero Dias: "))
-    
+    numeroDias = (data_fim - data_inicio).days
+    precoReserva = calcular_preco(numeroDias)
     nova_reserva = {
         'id': len(listBooking) + 1,
         'data_inicio': data_inicio,
@@ -120,6 +130,7 @@ def adicionar_reserva():
     listBooking.append(nova_reserva)
     save_data("listbooking.json", listBooking)
     print("Reserva efetuada com sucesso!")
+    print(f"Preço a pagar: {precoReserva}")
 
 def cliente_existe(telefone, email):
     for cliente in listCliente:
@@ -160,30 +171,39 @@ def adicionar_cliente():
 
 def removerCliente(): 
     id = int(input("Digite o id do cliente a ser removido: "))
+    cliente_encontrado = False
     for pessoa in listCliente: 
         if pessoa['id'] == id: 
             listCliente.remove(pessoa) 
             print(f"Cliente {id} removido com sucesso!") 
-        else: 
-            print(f"Cliente {id} não encontrado na lista.")
+            cliente_encontrado = True
+            break  # Uma vez que o cliente foi encontrado e removido, podemos sair do loop
+    if not cliente_encontrado: 
+        print(f"Cliente {id} não encontrado na lista.")
 
 def removerAutomovel(): 
-    id = int(input("Digite o id do automovel a ser removido: "))
+    id = int(input("Digite o id do automóvel a ser removido: "))
+    automovel_encontrado = False
     for automovel in listAutomovel: 
         if automovel['id'] == id: 
             listAutomovel.remove(automovel) 
-            print(f"Automovel {id} removido com sucesso!") 
-        else: 
-            print(f"Automovel {id} não encontrado na lista.")
+            print(f"Automóvel {id} removido com sucesso!") 
+            automovel_encontrado = True
+            break  # Uma vez que o automóvel foi encontrado e removido, podemos sair do loop
+    if not automovel_encontrado: 
+        print(f"Automóvel {id} não encontrado na lista.")
 
 def removerReserva(): 
     id = int(input("Digite o id da reserva a ser removida: "))
+    reserva_encontrada = False
     for reserva in listBooking: 
         if reserva['id'] == id: 
             listBooking.remove(reserva) 
             print(f"Reserva {id} removida com sucesso!") 
-        else: 
-            print(f"Reserva {id} não encontrada na lista.")
+            reserva_encontrada = True
+            break  # Uma vez que a reserva foi encontrada e removida, podemos sair do loop
+    if not reserva_encontrada: 
+        print(f"Reserva {id} não encontrada na lista.")
 
 def listar_automoveis():
     print("\nLista de Automóveis:")
@@ -355,7 +375,6 @@ def atualizar_reserva():
         "Cliente ID",
         "Automóvel ID",
         "Preço Reserva",
-        "Número de Dias",
         "Cancelar"
     ]
     selected_option = cutie.select(options)
@@ -365,28 +384,20 @@ def atualizar_reserva():
             reserva_encontrada = True
             if selected_option == 0:
                 reserva['data_inicio'] = obter_nova_data_inicio()
+                reserva['numeroDias'] = (reserva['data_fim'] - reserva['data_inicio']).days
             elif selected_option == 1:
                 reserva['data_fim'] = obter_nova_data_fim()
+                reserva['numeroDias'] = (reserva['data_fim'] - reserva['data_inicio']).days
             elif selected_option == 2:
                 reserva['cliente_id'] = int(input("Novo Cliente ID: "))
             elif selected_option == 3:
                 reserva['automovel_id'] = int(input("Novo Automóvel ID: "))
             elif selected_option == 4:
-                reserva['precoReserva'] = float(input("Novo Preço Reserva: "))
+                reserva['precoReserva'] = calcular_preco(reserva['numeroDias'])
             elif selected_option == 5:
-                reserva['numeroDias'] = int(input("Novo Número de Dias: "))
-            else:
                 print("Pedido cancelado!")
     if not reserva_encontrada:
         print(f"Reserva {reserva_id} não encontrada.")
-
-def desconto(numero_dias):
-    if numero_dias <= 4:
-        return 0
-    elif 5 <= numero_dias <= 8:
-        return 15
-    else:
-        return 25
 
 def pesquisar_cliente():
     nif = input("Inserir NIF do cliente para pesquisa: ")
@@ -439,6 +450,15 @@ def pesquisar_automovel():
             i += 1
             if i == 6:
                 break
+def achar_nome(id_cliente):
+   for cliente in listCliente:
+        if cliente['id'] == id_cliente:
+            return cliente['nome']
+        
+def achar_automovel(id_automovel):
+   for automovel in listAutomovel:
+        if automovel['id'] == id_automovel:
+            return automovel['matricula'],automovel['marca']
 
 def listar_reservas_futuras():
     print("\nReservas Futuras:")
@@ -449,13 +469,14 @@ def listar_reservas_futuras():
             flag = 1
             data_inicio_str = booking['data_inicio'].strftime('%d/%m/%Y')
             data_fim_str = booking['data_fim'].strftime('%d/%m/%Y')
+            nome = achar_nome(booking['cliente_id'])
+            matricula, marca = achar_automovel(booking['automovel_id'])
             print(f"\n=== Detalhes Reserva ID {booking['id']} ===")
-            print(f"Cliente ID: {booking['cliente_id']}")
-            print(f"Automóvel ID: {booking['automovel_id']}")
             print(f"Data de Início: {data_inicio_str}")
             print(f"Data de Fim: {data_fim_str}")
-            print(f"Preço booking: {booking['precoReserva']}")
-            print(f"Número de Dias: {booking['numeroDias']}")
+            print(f"Cliente: {nome}")
+            print(f"Automóvel: {marca} - {matricula}")
+            print(f"Total: {booking['precoReserva']}€")
             print("===============================")
     if(flag == 0):
         print("Não há reservas futuras.")
