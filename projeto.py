@@ -4,6 +4,7 @@ from datetime import datetime
 import os
 
 def is_date_string(value):
+    #Verifica se uma string pode ser convertida para um objeto datetime no formato "dd/mm/yyyy".
     try:
         datetime.strptime(value, "%d/%m/%Y")
         return True
@@ -11,6 +12,7 @@ def is_date_string(value):
         return False
 
 def custom_deserializer(obj):
+    #Converte strings de datas no formato "dd/mm/yyyy" para objetos datetime.
     for key, value in obj.items():
         if isinstance(value, str) and is_date_string(value):
             try:
@@ -23,9 +25,9 @@ def custom_deserializer(obj):
 
 def load_data(filename):
     try:
-        # Obtenha o diretório atual do script
+        # Obter o diretório atual
         diretorio_atual = os.path.dirname(__file__)
-        # Combine o caminho do diretório com o nome do arquivo desejado
+        # Combina o caminho do diretório com o nome do arquivo desejado
         caminho_arquivo = os.path.join(diretorio_atual, filename)
         with open(caminho_arquivo, "r") as f:
             data = json.load(f, object_hook=custom_deserializer)
@@ -37,11 +39,13 @@ def load_data(filename):
         print(f"\nErro ao carregar dados do arquivo {filename}:", str(e))
         return []
 
+#Carrega os dados dos arquivos JSON para as listas ao iniciar o programa 
 listAutomovel = load_data("listautomovel.json")
 listCliente = load_data("listcliente.json")
 listBooking = load_data("listbooking.json")
 ###    *********************************** ################  
 
+#Converte objetos datetime para strings no formato "dd/mm/yyyy"
 def custom_serializer(obj):
     if isinstance(obj, datetime):
         return obj.strftime("%d/%m/%Y")
@@ -49,16 +53,17 @@ def custom_serializer(obj):
 
 def save_data(filename, data):
     try:
-        # Obtenha o diretório atual do script
+        # Obter o diretório atual
         diretorio_atual = os.path.dirname(__file__)
-        # Combine o caminho do diretório com o nome do arquivo desejado
+        # Combina o caminho do diretório com o nome do arquivo desejado
         caminho_arquivo = os.path.join(diretorio_atual, filename)
-        # Salva os dados no arquivo na mesma pasta do script
+        # Salva os dados no arquivo na mesma pasta
         with open(caminho_arquivo, "w") as f:
             json.dump(data, f, default=custom_serializer, indent=4)
     except Exception as e:
         print(f"\nErro ao salvar dados em {filename}: {e}")
 
+#Salva todas as listas de dados em arquivos JSON correspondentes.
 def save_all_data():
     save_data("listautomovel.json", listAutomovel)
     save_data("listcliente.json", listCliente)
@@ -66,6 +71,7 @@ def save_all_data():
 
 def adicionar_automovel():
     print("\nAdicionar Automóvel:")
+    #Solicita informações do usuário
     matricula = input("Matrícula: ")
     marca = input("Marca: ")
     modelo = input("Modelo: ")
@@ -74,7 +80,7 @@ def adicionar_automovel():
     preco_diario = float(input("Preço Diário: "))
     cilindrada = int(input("Cilindrada: "))
     potencia = int(input("Potência: "))
-
+    #Cria um novo dicionário representando o automóvel
     novo_automovel = {
     'id': len(listAutomovel) + 1,
     'matricula': matricula,
@@ -86,10 +92,13 @@ def adicionar_automovel():
     'cilindrada': cilindrada,
     'potencia': potencia
 }
+    #Adiciona o novo automóvel a lista
     listAutomovel.append(novo_automovel)
+    #Salva a lista atualizada no arquivo JSON
     save_data("listautomovel.json", listAutomovel)
     print("Novo automóvel adicionado com sucesso!")
 
+#Calcula o preço da reserva com base no número de dias e aplica descontos, se aplicável.
 def calcular_preco(numero_dias):
     preco = float(input("Preço Reserva: "))
     if(numero_dias <= 4):
@@ -103,21 +112,23 @@ def calcular_preco(numero_dias):
 
 def adicionar_reserva():
     print("\nAdicionar Reserva:")
+    #Solicita informações do usuário
     cliente_id = int(input("ID do cliente: "))
     automovel_id = int(input("ID do automóvel: "))
     while True:
         try:
-            # Solicitar datas como strings
+            #Solicita datas como strings
             data_inicio_str = input("Data de Início (dd/mm/yyyy): ")
             data_fim_str = input("Data de Fim (dd/mm/yyyy): ")
-            # Converter strings de data para objetos datetime
+            #Converte strings de data para objetos datetime
             data_inicio = datetime.strptime(data_inicio_str, "%d/%m/%Y")
             data_fim = datetime.strptime(data_fim_str, "%d/%m/%Y")
             break  # Se a conversão for bem-sucedida, sai do loop
         except ValueError:
             print("Formato de data incorreto. Por favor, insira a data no formato dd/mm/yyyy (utilize a /).")
-    numeroDias = (data_fim - data_inicio).days
-    precoReserva = calcular_preco(numeroDias)
+    numeroDias = (data_fim - data_inicio).days #Calcula o número de dias da reserva
+    precoReserva = calcular_preco(numeroDias) #Calcula o preço da reserva 
+    #Cria um dicionário da nova reserva
     nova_reserva = {
         'id': len(listBooking) + 1,
         'data_inicio': data_inicio,
@@ -127,11 +138,14 @@ def adicionar_reserva():
         'precoReserva': precoReserva,
         'numeroDias': numeroDias
     }
+    #Adicionar a nova reserva a lista de reservas
     listBooking.append(nova_reserva)
+    #Salva a lista atualizada no arquivo JSON
     save_data("listbooking.json", listBooking)
     print("Reserva efetuada com sucesso!")
     print(f"Preço a pagar: {precoReserva}")
 
+#Verifica se um cliente com o mesmo telefone ou e-mail já existe na lista de clientes.
 def cliente_existe(telefone, email):
     for cliente in listCliente:
         if cliente['telefone'] == telefone or cliente['email'] == email:
@@ -140,23 +154,25 @@ def cliente_existe(telefone, email):
 
 def adicionar_cliente():
     print("Entra com os dados do Cliente:")
+    #Solicita informações do usuário
     nome = input("Nome: ")
     nif = int(input("NIF: "))
     while True:
         try:
-            # Solicitar a data de nascimento como string
+            #Solicita a data de nascimento como string
             data_nascimento_str = input("Data de Nascimento (dd/mm/yyyy): ")
-            # Converter a string de data para um objeto datetime
+            #Converte a string de data para um objeto datetime
             data_nascimento = datetime.strptime(data_nascimento_str, "%d/%m/%Y")
-            break  # Se a conversão for bem-sucedida, sai do loop
+            break  #Se a conversão for bem-sucedida, sai do loop
         except ValueError:
             print("Formato de data incorreto. Por favor, insira a data no formato dd/mm/yyyy (utilize a /).")
     telefone = int(input("Telefone: "))
     email = input("Email: ")
+    #Verifica se o cliente já existe
     if cliente_existe(telefone, email):
         print("Telefone ou email já existem na lista. Não é possível adicionar cliente.")
         return
-    
+    #Cria um dicionário do novo cliente
     novo_cliente = {
         'id': len(listCliente) + 1,
         'nome': nome,
@@ -165,47 +181,50 @@ def adicionar_cliente():
         'telefone': telefone,
         'email': email
     }
+    #Adicionar o novo cliente a lista de clientes
     listCliente.append(novo_cliente)
+    #Salva a lista atualizada no arquivo JSON
     save_data("listcliente.json", listCliente)
     print("Novo cliente adicionado com sucesso!")
 
 def removerCliente(): 
     id = int(input("Digite o id do cliente a ser removido: "))
-    cliente_encontrado = False
+    cliente_encontrado = False #Variável para verificar se o cliente foi encontrado
     for pessoa in listCliente: 
         if pessoa['id'] == id: 
-            listCliente.remove(pessoa) 
+            listCliente.remove(pessoa) #Remove o cliente da lista
             print(f"Cliente {id} removido com sucesso!") 
             cliente_encontrado = True
-            break  # Uma vez que o cliente foi encontrado e removido, podemos sair do loop
+            break  #Uma vez que o cliente foi encontrado e removido, sai do loop
     if not cliente_encontrado: 
         print(f"Cliente {id} não encontrado na lista.")
 
 def removerAutomovel(): 
     id = int(input("Digite o id do automóvel a ser removido: "))
-    automovel_encontrado = False
+    automovel_encontrado = False #Variável para verificar se o automovel foi encontrado
     for automovel in listAutomovel: 
         if automovel['id'] == id: 
-            listAutomovel.remove(automovel) 
+            listAutomovel.remove(automovel) #Remove o automovel da lista
             print(f"Automóvel {id} removido com sucesso!") 
             automovel_encontrado = True
-            break  # Uma vez que o automóvel foi encontrado e removido, podemos sair do loop
+            break  #Uma vez que o automóvel foi encontrado e removido, sai do loop
     if not automovel_encontrado: 
         print(f"Automóvel {id} não encontrado na lista.")
 
 def removerReserva(): 
     id = int(input("Digite o id da reserva a ser removida: "))
-    reserva_encontrada = False
+    reserva_encontrada = False #Variável para verificar se a reserva foi encontrada
     for reserva in listBooking: 
         if reserva['id'] == id: 
-            listBooking.remove(reserva) 
+            listBooking.remove(reserva) #Remove a reserva da lista
             print(f"Reserva {id} removida com sucesso!") 
             reserva_encontrada = True
-            break  # Uma vez que a reserva foi encontrada e removida, podemos sair do loop
+            break  #Uma vez que a reserva foi encontrada e removida, sai do loop
     if not reserva_encontrada: 
         print(f"Reserva {id} não encontrada na lista.")
 
 def listar_automoveis():
+    #Exibe na tela a lista de automóveis com seus respectivos dados.
     print("\nLista de Automóveis:")
     for automovel in listAutomovel:
         print("\n=== Dados do Automóvel ===")
@@ -222,6 +241,7 @@ def listar_automoveis():
 
 
 def listar_clientes():
+    #Exibe na tela a lista de clientes com seus respectivos dados.
     print("\nLista de Clientes:")
     for cliente in listCliente:
         print("\n=== Dados do Cliente ===")
@@ -235,6 +255,7 @@ def listar_clientes():
 
 
 def listar_reservas():
+    #Exibe na tela a lista de reservas com seus respectivos dados.
     print("\nLista de Reservas:")
     for reserva in listBooking:
         print("\n=== Dados da Reserva ===")
@@ -247,7 +268,7 @@ def listar_reservas():
         print(f"Número de Dias: {reserva['numeroDias']}")
         print("==========================")
 
-
+#Solicita ao usuário uma nova data de nascimento e a converte para um objeto datetime.
 def obter_nova_data_nascimento():
     while True:
         try:
@@ -259,12 +280,14 @@ def obter_nova_data_nascimento():
         except ValueError:
             print("Formato de data incorreto. Por favor, insira a data no formato dd/mm/yyyy (utilize a /).")
 
+#Permite ao usuário selecionar um cliente existente e escolher qual dado atualizar.
 def atualizar_cliente():
     print("\nAtualizar Cliente:")
-    if not listCliente:  # Verifica se a lista está vazia
+    if not listCliente:  #Verifica se a lista está vazia
         print("Não há clientes")
         return
     cliente_id = int(input("ID do cliente a ser atualizado: "))
+    #Apresenta opções para o usuário
     print("Escolha o dado que deseja atualizar:")
     options = [
         "Nome",
@@ -274,8 +297,8 @@ def atualizar_cliente():
         "Email",
         "Cancelar"
     ]
-    selected_option = cutie.select(options)
-    cliente_encontrado = False
+    selected_option = cutie.select(options)  #Guarda a opção selecionada pelo usuário
+    cliente_encontrado = False #Flag para verificar se o cliente foi encontrado
     for pessoa in listCliente: 
         if pessoa['id'] == cliente_id:
             cliente_encontrado = True
@@ -284,7 +307,7 @@ def atualizar_cliente():
             elif selected_option == 1:
                 pessoa['nif'] = input("Novo nif: ") 
             elif selected_option == 2:
-                pessoa['data_nascimento'] = obter_nova_data_nascimento()
+                pessoa['dataNascimento'] = obter_nova_data_nascimento()
             elif selected_option == 3:
                 novo_telefone = int(input("Novo telefone: "))
                 if cliente_existe(novo_telefone, None):
@@ -299,15 +322,18 @@ def atualizar_cliente():
                     pessoa['email'] = novo_email
             else:
                 print("Pedido cancelado!")
+    #Se o cliente não foi encontrado, exibe uma mensagem
     if not cliente_encontrado:
         print(f"Cliente {cliente_id} não encontrado.")
 
+#Permite ao usuário selecionar um automovel existente e escolher qual dado atualizar.
 def atualizar_automovel():
     print("\nAtualizar Automóvel:")
-    if not listAutomovel:  # Verifica se a lista está vazia
+    if not listAutomovel:  #Verifica se a lista está vazia
         print("Não há automóveis")
         return
     automovel_id = int(input("ID do automóvel a ser atualizado: "))
+    #Apresenta opções para o usuário
     print("Escolha o dado que deseja atualizar:")
     options = [
         "Matrícula",
@@ -320,8 +346,8 @@ def atualizar_automovel():
         "Potência",
         "Cancelar"
     ]
-    selected_option = cutie.select(options)
-    automovel_encontrado = False
+    selected_option = cutie.select(options) #Guarda a opção selecionada pelo usuário
+    automovel_encontrado = False #Flag para verificar se o automovel foi encontrado
     for automovel in listAutomovel: 
         if automovel['id'] == automovel_id:
             automovel_encontrado = True
@@ -343,9 +369,11 @@ def atualizar_automovel():
                 automovel['potencia'] = int(input("Nova Potência: ")) 
             else:
                 print("Pedido cancelado!")
+    #Se o automovel não foi encontrado, exibe uma mensagem
     if not automovel_encontrado:
         print(f"Automóvel {automovel_id} não encontrado.")
 
+#Solicita ao usuário uma nova data de início e a converte para um objeto datetime.
 def obter_nova_data_inicio():
     while True:
         try:
@@ -354,6 +382,7 @@ def obter_nova_data_inicio():
         except ValueError:
             print("Formato de data incorreto. Por favor, insira a data no formato dd/mm/yyyy.")
 
+#Solicita ao usuário uma nova data de fim e a converte para um objeto datetime.
 def obter_nova_data_fim():
     while True:
         try:
@@ -362,12 +391,14 @@ def obter_nova_data_fim():
         except ValueError:
             print("Formato de data incorreto. Por favor, insira a data no formato dd/mm/yyyy.")
 
+#Permite ao usuário selecionar uma reserva existente e escolher qual dado atualizar.
 def atualizar_reserva():
     print("\nAtualizar Reserva:")
-    if not listBooking:  # Verifica se a lista está vazia
+    if not listBooking:  #Verifica se a lista está vazia
         print("Não há reservas")
         return
     reserva_id = int(input("ID da reserva a ser atualizada: "))
+    #Apresenta opções para o usuário
     print("Escolha o dado que deseja atualizar:")
     options = [
         "Data de Início",
@@ -377,8 +408,8 @@ def atualizar_reserva():
         "Preço Reserva",
         "Cancelar"
     ]
-    selected_option = cutie.select(options)
-    reserva_encontrada = False
+    selected_option = cutie.select(options) #Guarda a opção selecionada pelo usuário
+    reserva_encontrada = False #Flag para verificar se a reserva foi encontrada
     for reserva in listBooking:
         if reserva['id'] == reserva_id:
             reserva_encontrada = True
@@ -396,25 +427,28 @@ def atualizar_reserva():
                 reserva['precoReserva'] = calcular_preco(reserva['numeroDias'])
             elif selected_option == 5:
                 print("Pedido cancelado!")
+    #Se a reserva não foi encontrada, exibe uma mensagem
     if not reserva_encontrada:
         print(f"Reserva {reserva_id} não encontrada.")
 
+#Pesquisa um cliente pelo NIF e exibe seus dados, depois exibe as 5 primeiras reservas desse cliente.
 def pesquisar_cliente():
-    nif = input("Inserir NIF do cliente para pesquisa: ")
-    flag = 0
+    nif = int(input("Inserir NIF do cliente para pesquisa: "))
+    flag = 0 #Flag para indicar se o cliente foi encontrado
     for cliente in listCliente:
         if cliente['nif'] == nif:
-            flag = 1
-            id_cliente = cliente['id']
+            flag = 1 #Atualiza a flag indicando que o cliente foi encontrado
+            id_cliente = cliente['id'] #Obtém o ID do cliente para usar para encontrar as reservas
             print(f"\n=== Dados Cliente {cliente['nome']}: ===")
             for chave, valor in cliente.items():
                 print(f"{chave}: {valor}")
             print(f"=============================")
             break
+    #Se o cliente não foi encontrado, exibe uma mensagem
     if(flag == 0):
         print("Cliente não encontrado.")
         return
-    i = 1
+    i = 1 #Contador para limitar o número de reservas exibidas
     for cliente in listBooking:
         if cliente['cliente_id'] == id_cliente:
             print(f"\n=== Cliente {id_cliente} - Booking {i}: ===")
@@ -422,25 +456,28 @@ def pesquisar_cliente():
                 print(f"{chave}: {valor}")
             print(f"=============================")
             i += 1
-            if i == 6:
+            #Limita a exibição a 5 reservas
+            if i == 6: 
                 break
 
+#Pesquisa um automóvel pela matrícula e exibe seus dados, depois exibe as 5 primeiras reservas desse automovel.
 def pesquisar_automovel():
     matricula = input("Inserir matrícula do cliente para pesquisa: ")
-    flag = 0
+    flag = 0 #Flag para indicar se o automóvel foi encontrado
     for automovel in listAutomovel:
         if automovel['matricula'] == matricula:
-            flag = 1
-            id_automovel = automovel['id']
+            flag = 1 #Atualiza a flag indicando que o automóvel foi encontrado
+            id_automovel = automovel['id'] #Obtém o ID do automovel para usar para encontrar as reservas
             print(f"\n=== Dados Automóvel {matricula}: ===")
             for chave, valor in automovel.items():
                 print(f"{chave}: {valor}")
             print(f"=============================")
-            break
+            break #Uma vez que o automóvel foi encontrado, sai do loop
+    #Se o automóvel não foi encontrado, exibe uma mensagem
     if(flag == 0):
         print("Automóvel não encontrado.")
         return
-    i = 1
+    i = 1 #Contador para limitar o número de reservas exibidas
     for automovel in listBooking:
         if automovel['automovel_id'] == id_automovel:
             print(f"\n=== Automóvel {id_automovel} - Booking {i}: ===")
@@ -448,29 +485,37 @@ def pesquisar_automovel():
                 print(f"{chave}: {valor}")
             print(f"=============================")
             i += 1
+            #Limita a exibição a 5 reservas
             if i == 6:
                 break
+
+#Encontra o nome do cliente com base no ID do cliente
 def achar_nome(id_cliente):
    for cliente in listCliente:
         if cliente['id'] == id_cliente:
             return cliente['nome']
-        
+
+#Encontra a matrícula e a marca do automóvel com base no ID do automóvel.    
 def achar_automovel(id_automovel):
    for automovel in listAutomovel:
         if automovel['id'] == id_automovel:
             return automovel['matricula'],automovel['marca']
 
+#Lista as reservas futuras, exibindo detalhes como data, cliente, automóvel e total.
 def listar_reservas_futuras():
     print("\nReservas Futuras:")
-    hoje = datetime.now()
-    flag = 0
+    hoje = datetime.now() #Obtém a data atual
+    flag = 0 #Flag para indicar se há reservas futuras
     for booking in listBooking:
         if booking['data_fim'] > hoje:
-            flag = 1
+            flag = 1 #Atualiza a flag indicando que há reservas futuras
+            #Formata as datas para exibição
             data_inicio_str = booking['data_inicio'].strftime('%d/%m/%Y')
             data_fim_str = booking['data_fim'].strftime('%d/%m/%Y')
+            #Obtém o nome do cliente e as informações do automóvel
             nome = achar_nome(booking['cliente_id'])
             matricula, marca = achar_automovel(booking['automovel_id'])
+            #Exibe os detalhes da reserva
             print(f"\n=== Detalhes Reserva ID {booking['id']} ===")
             print(f"Data de Início: {data_inicio_str}")
             print(f"Data de Fim: {data_fim_str}")
@@ -478,12 +523,15 @@ def listar_reservas_futuras():
             print(f"Automóvel: {marca} - {matricula}")
             print(f"Total: {booking['precoReserva']}€")
             print("===============================")
+    #Se não houver reservas futuras, exibe uma mensagem
     if(flag == 0):
         print("Não há reservas futuras.")
 
 def menu():
+    #Apresentação do menu principal
     print("===== Rent-a-Car - Bem-vindo =====")
     print("Explore as opções abaixo e gerencie facilmente sua frota de automóveis e reservas:")
+    #Lista de opções disponíveis no menu
     options = [
         "Listar Clientes",
         "Listar Automóveis",
@@ -502,7 +550,8 @@ def menu():
         "Listar Reservas Futuras",
         "Sair",
     ]
-    selected_option = cutie.select(options)
+    selected_option = cutie.select(options) #Solicita ao usuário que escolha uma opção do menu e guarda
+    #Executa a operação correspondente à opção escolhida
     if(selected_option == 0):
         listar_clientes()
     elif(selected_option == 1):
@@ -533,14 +582,15 @@ def menu():
         pesquisar_cliente()
     elif(selected_option == 14):
         listar_reservas_futuras()
+    #Se o usuário escolher uma opção inválida, sai o programa
     else:
         print("Até a próxima!")
      
 def main():
+    #Inicia o menu principal
     menu()
-    # Salvando todas as listas com os novos dados de volta nos arquivos JSON
+    #Salvando todas as listas com os novos dados de volta nos arquivos JSON
     save_all_data()
-
 
 if __name__ == "__main__":
     main()
