@@ -509,7 +509,7 @@ def listar_reservas_futuras():
     hoje = datetime.now() #Obtém a data atual
     flag = 0 #Flag para indicar se há reservas futuras
     for booking in listBooking:
-        if booking['data_fim'] > hoje:
+        if booking['data_inicio'] > hoje:
             flag = 1 #Atualiza a flag indicando que há reservas futuras
             #Formata as datas para exibição
             data_inicio_str = booking['data_inicio'].strftime('%d/%m/%Y')
