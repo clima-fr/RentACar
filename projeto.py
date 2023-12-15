@@ -3,6 +3,8 @@ import cutie
 from datetime import datetime
 import os
 
+#Grupo: Clara Franco, Pedro Matos, Pedro Pinto, Temaco Mafumba
+
 def is_date_string(value):
     #Verifica se uma string pode ser convertida para um objeto datetime no formato "dd/mm/yyyy".
     try:
