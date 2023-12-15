@@ -1,7 +1,7 @@
 # Rent a Car
-Project developed for CESAE's AWS Re/Start course. Python Programming module. 
+>This project was developed for CESAE's AWS Re/Start course. Python programming module. 
 
->The project aims to implement an operational management system for a Rent-a-car. Following these instructions:
+The project aims to implement an operational management system for a Rent-a-car. Following these instructions:
 
 1. The rent-a-car company has a fleet of cars represented by the listAutomovel. This should store dictionaries with the following keys: id, matricula, marca, modelo, cor, portas, precoDiario, cilindrada, potencia;
 2. The company's clients should be registered in the listClient. This list should store dictionaries with the following keys: id, nome, nif, dataNascimento, telefone, email. 
