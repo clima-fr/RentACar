@@ -1,5 +1,5 @@
 # Rent a Car
->This project was developed for CESAE's AWS Re/Start course. Python programming module. 
+>This project was developed for CESAE's AWS Re/Start course. Python Programming module.
 
 The project aims to implement an operational management system for a Rent-a-car. Following these instructions:
 
